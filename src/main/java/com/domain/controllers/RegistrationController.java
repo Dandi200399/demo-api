@@ -1,7 +1,7 @@
 package com.domain.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,13 +14,14 @@ import com.domain.service.UserService;
 public class RegistrationController {
     private final UserService userService;
 
-    @Autowired
+    
     public RegistrationController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/registration")
     public ResponseEntity<ApiResponse> register(@RequestBody RegistrationRequest request) {
+        // Metode POST
         // Validasi email dan password
         if (!isValidEmail(request.getEmail())) {
             return ResponseEntity.badRequest().body(new ApiResponse(102, "Parameter email tidak sesuai format", null));
@@ -36,7 +37,16 @@ public class RegistrationController {
         return ResponseEntity.ok(new ApiResponse(0, "Registrasi berhasil silahkan login", null));
     }
 
+    @GetMapping("/registration")
+    public ResponseEntity<String> getRegistrationPage() {
+        // Metode GET
+        // Di sini, Anda dapat mengembalikan halaman HTML atau pesan yang Anda inginkan
+        return ResponseEntity.ok("Ini adalah halaman pendaftaran.");
+    }
+
     private boolean isValidEmail(String email) {
-        return false;
+        // Validasi format email menggunakan ekspresi reguler
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        return email.matches(regex);
     }
 }

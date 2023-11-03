@@ -1,6 +1,7 @@
 package com.domain.controllers;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 import java.sql.Date;
@@ -8,6 +9,7 @@ import java.sql.Date;
 import javax.crypto.SecretKey;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,10 +30,12 @@ public class LoginController {
 
         // Validasi panjang password
         if (request.getPassword().length() < 8) {
-            return ResponseEntity.badRequest().body(new ApiResponse(103, "Panjang password kurang dari 8 karakter", null));
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(103, "Panjang password kurang dari 8 karakter", null));
         }
 
-        // Simulasikan autentikasi (Anda dapat menggantinya dengan logika autentikasi yang sesuai dengan aplikasi Anda)
+        // Simulasikan autentikasi (Anda dapat menggantinya dengan logika autentikasi
+        // yang sesuai dengan aplikasi Anda)
         boolean authenticationSuccess = authenticateUser(request.getEmail(), request.getPassword());
 
         if (authenticationSuccess) {
@@ -44,6 +48,13 @@ public class LoginController {
         }
     }
 
+    @GetMapping("/login")
+        public ResponseEntity<String> getLoginPage() {
+        // Di sini, Anda dapat mengembalikan halaman HTML atau pesan yang sesuai
+        return ResponseEntity.ok("Ini adalah halaman login.");
+}
+
+
     private boolean isValidEmail(String email) {
         // Validasi format email
         // Misalnya: return email.matches("pattern_reguler_email")
@@ -52,21 +63,21 @@ public class LoginController {
 
     private boolean authenticateUser(String email, String password) {
         // Simulasi autentikasi pengguna
-        // Anda dapat menggantinya dengan logika autentikasi yang sesuai dengan aplikasi Anda
+        // Anda dapat menggantinya dengan logika autentikasi yang sesuai dengan aplikasi
+        // Anda
         return true;
     }
 
     private String generateJwtToken(String email) {
-    // Generate JWT token dengan payload email dan expiration selama 12 jam
-    byte[] keyBytes = "yourSecretKey".getBytes(); // Ganti dengan kunci rahasia yang sesuai
-    SecretKey key = Keys.hmacShaKeyFor(keyBytes);
+        // Generate JWT token dengan payload email dan expiration selama 12 jam
+         SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    String token = Jwts.builder()
-            .setSubject(email)
-            .setExpiration(new Date(System.currentTimeMillis() + 12 * 60 * 60 * 1000))
-            .signWith(key)
-            .compact();
-    return token;
+        String token = Jwts.builder()
+                .setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + 12 * 60 * 60 * 1000))
+                .signWith(key)
+                .compact();
+        return token;
     }
 }
 
