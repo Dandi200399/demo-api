@@ -40,7 +40,7 @@ public class RegistrationController {
     @GetMapping("/registration")
     public ResponseEntity<String> getRegistrationPage() {
         // Metode GET
-        // Di sini, Anda dapat mengembalikan halaman HTML atau pesan yang Anda inginkan
+        // Di sini, dapat mengembalikan halaman HTML atau pesan yang  inginkan
         return ResponseEntity.ok("Ini adalah halaman pendaftaran.");
     }
 
